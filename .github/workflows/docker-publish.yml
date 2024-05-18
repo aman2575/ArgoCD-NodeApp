@@ -7,32 +7,26 @@ on:
     branches: [ "master" ]
 
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag node-hello:$(date +%s)
-    - name: Log into registry
-      run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
-    - name: Push image
-      run: | 
-        IMAGE_ID = aman2575/node-hello
-        IMAGE_ID = $(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
-        VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
-        #Stripe "v" prefix from tag name
-        [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
-        #Use Docker `latest` tag convention
-        [ "$VERSION" == "master" ] && VERSION=latest
+      - uses: actions/checkout@v4
+      - name: Build the Docker image
+        run: docker build . --file Dockerfile --tag node-hello:$(date +%s)
+      - name: Log into registry
+        run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+      - name: Push image
+        run: | 
+          IMAGE_ID=aman2575/node-hello
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          # Strip "v" prefix from tag name
+          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+          # Use Docker `latest` tag convention
+          [ "$VERSION" == "master" ] && VERSION=latest
 
-        echo IMAGE_ID=$IMAGE_ID
-        echo VERSION=$VERSION
+          echo IMAGE_ID=$IMAGE_ID
+          echo VERSION=$VERSION
 
-        docker tag node-hello $IMAGE_ID:$VERSION
-        docker push $IMAGE_ID:$VERSION
-        
-
-        
+          docker tag node-hello $IMAGE_ID:$VERSION
+          docker push $IMAGE_ID:$VERSION

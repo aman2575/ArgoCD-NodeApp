@@ -1,0 +1,13 @@
+project: default
+source:
+  repoURL: 'https://github.com/aman2575/ArgoCD-NodeApp.git'
+  path: nodejs-app
+  targetRevision: HEAD
+  helm:
+    valueFiles:
+      - values.yaml
+destination:
+  server: 'https://kubernetes.default.svc'
+  namespace: default
+syncPolicy:
+  automated: {}

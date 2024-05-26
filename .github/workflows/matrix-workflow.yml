@@ -1,0 +1,25 @@
+name: Reusable workflow example
+
+on: 
+  workflow_call:
+    inputs:
+      config-path:
+        required: true
+        type: string
+    secrets:
+      envPAT:
+        required: true
+jobs:
+  environmet_matrix:
+    strategy: 
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+        versions: [14,16]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.vesion }}
+          
+        
+        

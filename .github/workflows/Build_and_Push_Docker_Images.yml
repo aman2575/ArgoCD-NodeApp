@@ -9,9 +9,9 @@ on:
       tag:
         type: string
     secrets:
-      registry_username:
+      DOCKERHUB_USERNAME:
           required: true
-      registry_password:
+      DOCKERHUB_PASSWORD:
           required: true
 jobs:
   build:
